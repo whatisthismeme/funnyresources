@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { skillNameMap } from '$lib/data/skill';
+import { base } from '$app/paths';
 
 export function entries() {
     return Object.keys(skillNameMap).map((id) => ({ id }));
@@ -18,6 +19,6 @@ export async function GET({ params }: any) {
     return json({
         id: Number(id),
         name,
-        imageUrl: `/res/skillimage/us/${id}.png`
+        imageUrl: `${base}/res/skillimage/us/${id}.png`
     });
 }

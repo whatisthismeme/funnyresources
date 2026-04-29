@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { statusNameMap } from '$lib/data/statuscondition';
+import { base } from '$app/paths';
 
 export function entries() {
     return Object.keys(statusNameMap).map((id) => ({ id }));
@@ -18,6 +19,6 @@ export async function GET({ params }: any) {
     return json({
         id: Number(id),
         name,
-        imageUrl: `/res/status/${id}.png`
+        imageUrl: `${base}/res/status/${id}.png`
     });
 }

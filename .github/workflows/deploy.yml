@@ -37,6 +37,8 @@ jobs:
         run: npm ci
 
       - name: Build SvelteKit application
+        env:
+          BASE_PATH: '/${{ github.event.repository.name }}'
         run: npm run build
 
       - name: Upload artifact

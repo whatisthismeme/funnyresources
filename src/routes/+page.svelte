@@ -2,6 +2,7 @@
     import { skillNameMap } from '$lib/data/skill';
     import { statusNameMap } from '$lib/data/statuscondition';
     import { onMount } from 'svelte';
+    import { base } from '$app/paths';
 
     let activeTab: 'skills' | 'status' = $state('skills');
     let searchQuery = $state('');
@@ -21,7 +22,7 @@
     async function testFetch(type: 'skill' | 'status', id: string) {
         demoLoading = true;
         try {
-            const res = await fetch(`/api/${type}/${id}`);
+            const res = await fetch(`${base}/api/${type}/${id}`);
             if (res.ok) {
                 demoData = await res.json();
             } else {
@@ -120,7 +121,7 @@
                     <div class="group bg-gray-800 hover:bg-gray-750 border border-gray-700 hover:border-indigo-500 rounded-xl p-4 flex flex-col items-center text-center transition-all duration-300 hover:shadow-[0_0_15px_rgba(99,102,241,0.2)] hover:-translate-y-1">
                         <div class="w-16 h-16 mb-3 rounded-lg bg-gray-900 shadow-inner flex items-center justify-center p-2 relative overflow-hidden group-hover:ring-2 ring-indigo-500/50 transition-all">
                             <img 
-                                src="/res/skillimage/us/{skill.id}.png" 
+                                src="{base}/res/skillimage/us/{skill.id}.png" 
                                 alt={skill.name} 
                                 class="max-w-full max-h-full object-contain"
                                 loading="lazy"
@@ -144,7 +145,7 @@
                         <div class="w-12 h-12 mb-3 rounded-lg bg-gray-900 shadow-inner flex items-center justify-center p-2 relative overflow-hidden group-hover:ring-2 ring-purple-500/50 transition-all">
                             <!-- Status icons are usually smaller, zooming slightly looks better -->
                             <img 
-                                src="/res/status/{status.id}.png" 
+                                src="{base}/res/status/{status.id}.png" 
                                 alt={status.name} 
                                 class="scale-[1.5] pixelated object-contain"
                                 loading="lazy"
