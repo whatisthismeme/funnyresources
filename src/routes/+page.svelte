@@ -40,10 +40,10 @@
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-inner border border-indigo-400">
-                    M
+                    F
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">Mabinogi Assets</h1>
+                    <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">Funnychart Assets</h1>
                     <p class="text-xs text-gray-400">Skill & Status Condition Viewer</p>
                 </div>
             </div>
