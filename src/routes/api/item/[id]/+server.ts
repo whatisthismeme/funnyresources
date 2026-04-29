@@ -1,15 +1,14 @@
-import { statusNameMap } from '$lib/data/statuscondition';
-import { base } from '$app/paths';
+import { itemNameMap } from '$lib/data/item';
 
 export function entries() {
-    return Object.keys(statusNameMap).map((id) => ({ id }));
+    return Object.keys(itemNameMap).map((id) => ({ id }));
 }
 
 export const prerender = true;
 
 export async function GET({ params }: any) {
     const { id } = params;
-    const name = statusNameMap[Number(id)];
+    const name = itemNameMap[Number(id)];
     
     if (!name) {
         return new Response('Not found', { status: 404 });
@@ -17,8 +16,7 @@ export async function GET({ params }: any) {
 
     const data = {
         id: Number(id),
-        name,
-        imageUrl: `${base}/res/status/${id}.png`
+        name
     };
 
     return new Response(JSON.stringify(data), {

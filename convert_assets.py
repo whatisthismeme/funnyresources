@@ -200,8 +200,8 @@ ITEM_TXTS = [
     'itemdb_weapon.english.txt'
 ]
 ITEM_XMLS = [
-    'ItemDB.xml', 'ItemDB_MainEquip.xml', 
-    'ItemDB_SubEquip.xml', 'itemDB_ETC.xml', 
+    'ItemDB.xml', 'itemDB_ETC.xml','ItemDB_MainEquip.xml', 
+    'ItemDB_SubEquip.xml', 
     'itemDB_Weapon.xml'
 ]
 
@@ -272,11 +272,23 @@ def generate_ts_files():
         print(f"Error parsing skills for TS: {e}")
 
     # Items
-    item_txt_map = {}
+    # Map of filename prefixes to their localized text mappings
+    # e.g. "itemdb_weapon" -> { "2364": "Weapon Name" }
+    item_txt_collections = {}
     for txt_name in ITEM_TXTS:
-        m = load_txt_map(os.path.join(ASSET_DIR, txt_name))
-        item_txt_map.update(m)
-    print(f"Loaded {len(item_txt_map)} item names from stats.")
+        # Extract prefix from filename (e.g. 'itemdb_weapon.english.txt' -> 'itemdb_weapon')
+        # Also handle 'ItemDB.english.txt' -> 'item' or 'itemdb' (Mabinogi uses 'item' usually for the main DB)
+        prefix = txt_name.split('.')[0].lower()
+        if prefix == 'itemdb':
+            # Main ItemDB often uses 'xml.item.ID' or 'xml.itemdb.ID'
+            # We'll store it under both or handle specifically
+            m = load_txt_map(os.path.join(ASSET_DIR, txt_name))
+            item_txt_collections['item'] = m
+            item_txt_collections['itemdb'] = m
+        else:
+            item_txt_collections[prefix] = load_txt_map(os.path.join(ASSET_DIR, txt_name))
+            
+    print(f"Loaded {len(item_txt_collections)} item text collections.")
 
     item_map = {}
     for xml_name in ITEM_XMLS:
@@ -291,11 +303,24 @@ def generate_ts_files():
                     iid = attrs.get('ID')
                     name = attrs.get('Text_Name0')
                     local_ref = attrs.get('Text_Name1', '')
-                    
                     if local_ref:
-                        lt_match = re.search(r'(\d+)', local_ref)
-                        if lt_match and lt_match.group(1) in item_txt_map:
-                            name = item_txt_map[lt_match.group(1)]
+                        # Pattern: _LT[xml.itemdb_weapon.2364]
+                        lt_match = re.search(r'_LT\[xml\.([^.]+)\.(\d+)\]', local_ref)
+                        if lt_match:
+                            prefix = lt_match.group(1).lower()
+                            txt_id = lt_match.group(2)
+                            if prefix in item_txt_collections and txt_id in item_txt_collections[prefix]:
+                                name = item_txt_collections[prefix][txt_id]
+                        else:
+                            # Fallback to simple digit search if pattern doesn't match perfectly
+                            lt_match = re.search(r'(\d+)', local_ref)
+                            if lt_match:
+                                txt_id = lt_match.group(1)
+                                # Search across all collections if we don't know the prefix
+                                for collection in item_txt_collections.values():
+                                    if txt_id in collection:
+                                        name = collection[txt_id]
+                                        break
                             
                     if iid and name:
                         item_map[int(iid)] = clean_name(name)

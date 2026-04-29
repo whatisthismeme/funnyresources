@@ -1,4 +1,3 @@
-import { json } from '@sveltejs/kit';
 import { skillNameMap } from '$lib/data/skill';
 import { base } from '$app/paths';
 
@@ -16,9 +15,15 @@ export async function GET({ params }: any) {
         return new Response('Not found', { status: 404 });
     }
 
-    return json({
+    const data = {
         id: Number(id),
         name,
         imageUrl: `${base}/res/skillimage/us/${id}.png`
+    };
+
+    return new Response(JSON.stringify(data), {
+        headers: {
+            'Content-Type': 'text/plain'
+        }
     });
 }
