@@ -90,7 +90,7 @@ def process_skills():
             # Y Margin: Top align (offset 0) to fix "shifted up" issue
             left = 2 + pos_x * SKILL_ICON_SIZE
             top = 0 + pos_y * SKILL_ICON_SIZE
-            right = left + SKILL_ICON_SIZE
+            right = left + SKILL_ICON_SIZE - 1
             bottom = top + SKILL_ICON_SIZE
             
             # Check bounds
@@ -208,7 +208,7 @@ def load_txt_map(path):
     
     # Let's try flexible loading
     content = ""
-    for enc in ['utf-8', 'utf-16', 'cp949']:
+    for enc in ['utf-8-sig', 'utf-8', 'utf-16', 'cp949']:
         try:
             with open(path, 'r', encoding=enc) as f:
                 content = f.read()
